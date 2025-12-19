@@ -7,21 +7,63 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
+    <!-- Start Screen Overlay -->
+    <div id="startScreen" class="start-screen">
+      <div class="start-content">
+        <h1 id="startTitle" class="game-title">♔ 4×5 Chess Pro ♚</h1>
+        <p id="startSubtitle" class="subtitle">Strategic Mastery in Minimal Space</p>
+
+        <div class="start-controls">
+          <div class="control-group">
+            <label for="startLanguage">Language / Dil</label>
+            <select id="startLanguage" onchange="setLanguage(this.value)">
+              <option value="en">🇬🇧 English</option>
+              <option value="tr">🇹🇷 Türkçe</option>
+              <option value="es">🇪🇸 Español</option>
+              <option value="fr">🇫🇷 Français</option>
+              <option value="de">🇩🇪 Deutsch</option>
+              <option value="it">🇮🇹 Italiano</option>
+              <option value="ru">🇷🇺 Русский</option>
+              <option value="zh">🇨🇳 中文</option>
+              <option value="ja">🇯🇵 日本語</option>
+              <option value="pt">🇵🇹 Português</option>
+              <option value="ar">🇸🇦 العربية</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label for="startDifficulty">Difficulty / Zorluk</label>
+            <select id="startDifficulty">
+              <option value="1">🟢 Easy / Kolay</option>
+              <option value="2" selected>🟡 Medium / Orta</option>
+              <option value="3">🔴 Hard / Zor</option>
+              <option value="4">💀 Expert / Uzman</option>
+            </select>
+          </div>
+
+          <button id="btnStartGame" class="btn-start" onclick="startGame()">▶ START GAME</button>
+        </div>
+
+        <div class="footer-credits">
+          <p>© 2025 pro DenizEren</p>
+        </div>
+      </div>
+    </div>
+
     <!-- Mobile Menu Button -->
     <button id="mobileMenuBtn" class="mobile-menu-btn" onclick="toggleMobileSettings()">
       <span class="icon">⚙️</span>
     </button>
 
-    <div class="container">
+    <div class="container" id="mainGameContainer" style="filter: blur(5px); opacity: 0.5; pointer-events: none">
       <div id="settingsPanel" class="side-panel card">
         <button id="closeSettingsBtn" class="close-settings-btn" onclick="toggleMobileSettings()">✖</button>
         <div class="collapsible-header" onclick="togglePanel('settings')">
-          <h3 id="settingsTitle" style="color: white; margin-bottom: 0; display: flex; align-items: center; gap: 8px">
-            <span class="icon">🎯</span> Settings
-          </h3>
+          <h3 id="settingsTitle" style="margin-bottom: 0; display: flex; align-items: center; gap: 8px"><span class="icon">🎯</span> Settings</h3>
           <span class="chevron">▾</span>
         </div>
         <div id="settingsContent" class="collapsible-content">
+          <!-- Language selector removed from here as it is in start screen, but kept for consistency if needed, or I can sync them -->
           <div class="language-selector">
             <select id="languageSelect" onchange="setLanguage(this.value)">
               <option value="en">🇬🇧 English</option>
@@ -46,17 +88,17 @@
           <div class="difficulty">
             <label id="lblAiDifficulty">⚙️ AI Difficulty:</label>
             <select id="aiLevel" onchange="aiSeviyesiDegisti()">
-              <option value="1">🟢 Easy (Level 1)</option>
-              <option value="2" selected>🟡 Medium (Level 2)</option>
-              <option value="3">🔴 Hard (Level 3)</option>
-              <option value="4">💀 Expert (Level 4)</option>
+              <option value="1">🟢 Easy</option>
+              <option value="2" selected>🟡 Medium</option>
+              <option value="3">🔴 Hard</option>
+              <option value="4">💀 Expert</option>
             </select>
           </div>
         </div>
       </div>
 
-      <div class="card">
-        <h1>♔ 4×5 Chess Pro ♚</h1>
+      <div class="card board-card">
+        <!-- H1 Removed for cleaner look -->
         <div class="info-bar">
           <div class="status-indicator">
             <div class="pulse" id="pulse"></div>

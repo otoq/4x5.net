@@ -621,7 +621,7 @@ function tahtayiDegerlendir(testTahta) {
   return skor;
 }
 
-yeniOyun();
+// Removed auto-start yeniOyun();
 initMobilePanels();
 window.addEventListener("resize", initMobilePanels);
 
@@ -635,4 +635,29 @@ function toggleMobileSettings() {
   } else {
     document.body.style.overflow = "";
   }
+}
+
+function startGame() {
+  // Get values from start screen
+  const diffSelect = document.getElementById("startDifficulty");
+  const langSelect = document.getElementById("startLanguage");
+
+  // Set game state
+  aiDerinlik = parseInt(diffSelect.value);
+
+  // Sync with main settings panel
+  document.getElementById("aiLevel").value = aiDerinlik;
+
+  // Hide start screen
+  const startScreen = document.getElementById("startScreen");
+  startScreen.classList.add("hidden");
+
+  // Show main container
+  const container = document.getElementById("mainGameContainer");
+  container.style.filter = "none";
+  container.style.opacity = "1";
+  container.style.pointerEvents = "all";
+
+  // Start the game
+  yeniOyun();
 }
