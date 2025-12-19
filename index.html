@@ -24,6 +24,7 @@
         --accent-green: #81c784;
         --accent-red: #e57373;
         --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        --square-size: clamp(56px, min(20vw, 16vh), 100px);
       }
 
       body {
@@ -122,8 +123,8 @@
 
       .board {
         display: grid;
-        grid-template-columns: repeat(4, 90px);
-        grid-template-rows: repeat(5, 90px);
+        grid-template-columns: repeat(4, var(--square-size));
+        grid-template-rows: repeat(5, var(--square-size));
         gap: 0;
         border: 4px solid rgba(255, 255, 255, 0.3);
         border-radius: 15px;
@@ -133,12 +134,12 @@
       }
 
       .square {
-        width: 90px;
-        height: 90px;
+        width: var(--square-size);
+        height: var(--square-size);
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 56px;
+        font-size: calc(var(--square-size) * 0.62);
         cursor: pointer;
         position: relative;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -176,6 +177,11 @@
       .square.valid {
         background: #90ee90 !important;
         position: relative;
+      }
+
+      .square.last-move {
+        outline: 4px solid rgba(255, 255, 255, 0.6);
+        box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.25);
       }
 
       .square.valid::after {
@@ -216,6 +222,31 @@
         color: rgba(0, 0, 0, 0.4);
         bottom: 2px;
         right: 4px;
+      }
+
+      /* Collapsible panels for mobile */
+      .collapsible-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .collapsible-header .chevron {
+        font-size: 18px;
+        transition: transform 0.2s ease;
+      }
+      .side-panel.collapsed .collapsible-header .chevron {
+        transform: rotate(-90deg);
+      }
+      .collapsible-content {
+        margin-top: 12px;
+      }
+      @media (max-width: 600px) {
+        .side-panel.collapsed .collapsible-content {
+          display: none;
+        }
       }
 
       .side-panel {
@@ -570,14 +601,8 @@
       }
 
       @media (max-width: 600px) {
-        .board {
-          grid-template-columns: repeat(4, 70px);
-          grid-template-rows: repeat(5, 70px);
-        }
-        .square {
-          width: 70px;
-          height: 70px;
-          font-size: 42px;
+        :root {
+          --square-size: clamp(52px, min(22vw, 18vh), 80px);
         }
         .footer-content-copy {
           flex-direction: column;
@@ -592,9 +617,12 @@
   </head>
   <body>
     <div class="container">
-      <div class="side-panel card">
-        <div>
-          <h3 style="color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 8px"><span class="icon">🎯</span> Ayarlar</h3>
+      <div id="settingsPanel" class="side-panel card">
+        <div class="collapsible-header" onclick="togglePanel('settings')">
+          <h3 style="color: white; margin-bottom: 0; display: flex; align-items: center; gap: 8px"><span class="icon">🎯</span> Ayarlar</h3>
+          <span class="chevron">▾</span>
+        </div>
+        <div id="settingsContent" class="collapsible-content">
           <div class="controls">
             <button onclick="yeniOyun()">🔄 Yeni Oyun</button>
             <button class="btn-secondary" onclick="tarafDegistir()">🔀 Taraf Değiştir</button>
@@ -609,27 +637,24 @@
               <option value="4">💀 Uzman (Seviye 4)</option>
             </select>
           </div>
-        </div>
-
-        <div class="stats">
-          <div class="stat-box">
-            <span class="stat-value" id="moveCount">0</span>
-            <span class="stat-label">Hamle</span>
+          <div class="stats">
+            <div class="stat-box">
+              <span class="stat-value" id="moveCount">0</span>
+              <span class="stat-label">Hamle</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-value" id="captureCount">0</span>
+              <span class="stat-label">Alınan</span>
+            </div>
           </div>
-          <div class="stat-box">
-            <span class="stat-value" id="captureCount">0</span>
-            <span class="stat-label">Alınan</span>
+          <div class="captured">
+            <h3><span class="icon">⚪</span> Beyaz Aldı</h3>
+            <div class="captured-pieces" id="whiteCaptured"></div>
           </div>
-        </div>
-
-        <div class="captured">
-          <h3><span class="icon">⚪</span> Beyaz Aldı</h3>
-          <div class="captured-pieces" id="whiteCaptured"></div>
-        </div>
-
-        <div class="captured">
-          <h3><span class="icon">⚫</span> Siyah Aldı</h3>
-          <div class="captured-pieces" id="blackCaptured"></div>
+          <div class="captured">
+            <h3><span class="icon">⚫</span> Siyah Aldı</h3>
+            <div class="captured-pieces" id="blackCaptured"></div>
+          </div>
         </div>
       </div>
 
@@ -647,9 +672,12 @@
         </div>
       </div>
 
-      <div class="side-panel card">
-        <div class="move-history">
-          <h3><span class="icon">📜</span> Hamle Geçmişi</h3>
+      <div id="historyPanel" class="side-panel card">
+        <div class="collapsible-header" onclick="togglePanel('history')">
+          <h3 style="color: white; margin-bottom: 0; display: flex; align-items: center; gap: 8px"><span class="icon">📜</span> Hamle Geçmişi</h3>
+          <span class="chevron">▾</span>
+        </div>
+        <div id="historyContent" class="collapsible-content">
           <div class="move-list" id="moveHistory"></div>
         </div>
       </div>
@@ -703,6 +731,8 @@
       let aiDerinlik = 2;
       let oyunSuresi = 0;
       let zamanSayaci = null;
+      let sonHamle = null;
+      let aiCalisiyor = false;
 
       function tahtayiBaslat() {
         tahta = [
@@ -724,6 +754,8 @@
         yakalananlar = { beyaz: [], siyah: [] };
         hamleNumarasi = 0;
         oyunSuresi = 0;
+        sonHamle = null;
+        aiCalisiyor = false;
 
         clearInterval(zamanSayaci);
         zamanSayaci = setInterval(() => {
@@ -763,6 +795,7 @@
           yakalananlar = JSON.parse(JSON.stringify(oncekiDurum.yakalananlar));
           beyazSirasi = true;
           hamleNumarasi = oncekiDurum.hamleNo;
+          sonHamle = null;
           tahtayiCiz();
           bilgiGuncelle();
           gecmisiGuncelle();
@@ -774,6 +807,28 @@
       function aiSeviyesiDegisti() {
         aiDerinlik = parseInt(document.getElementById("aiLevel").value);
         bildirimGoster(`AI zorluğu: Seviye ${aiDerinlik}`);
+      }
+
+      function togglePanel(which) {
+        const panelId = which === "settings" ? "settingsPanel" : "historyPanel";
+        const panel = document.getElementById(panelId);
+        if (panel) {
+          panel.classList.toggle("collapsed");
+        }
+      }
+
+      function initMobilePanels() {
+        const isMobile = window.innerWidth <= 600;
+        const settings = document.getElementById("settingsPanel");
+        const history = document.getElementById("historyPanel");
+        if (!settings || !history) return;
+        if (isMobile) {
+          settings.classList.add("collapsed");
+          history.classList.add("collapsed");
+        } else {
+          settings.classList.remove("collapsed");
+          history.classList.remove("collapsed");
+        }
       }
 
       function tahtayiCiz() {
@@ -807,6 +862,10 @@
               kare.classList.add("valid");
             }
 
+            if (sonHamle && ((sonHamle.basSat === sat && sonHamle.basSut === sut) || (sonHamle.bitSat === sat && sonHamle.bitSut === sut))) {
+              kare.classList.add("last-move");
+            }
+
             kare.onclick = () => kareTiklandi(sat, sut);
             tahtaEl.appendChild(kare);
           }
@@ -814,7 +873,7 @@
       }
 
       function kareTiklandi(sat, sut) {
-        if (oyunBitti) return;
+        if (oyunBitti || aiCalisiyor) return;
 
         const oyuncuBeyazMi = bilgisayarRengi === "siyah";
         if ((oyuncuBeyazMi && !beyazSirasi) || (!oyuncuBeyazMi && beyazSirasi)) {
@@ -829,6 +888,11 @@
 
           if (!oyunBitti) {
             beyazSirasi = !beyazSirasi;
+            oyunBittiMiKontrol();
+            if (oyunBitti) {
+              bilgiGuncelle();
+              return;
+            }
             bilgiGuncelle();
 
             const simdiBilgisayarMi = (bilgisayarRengi === "beyaz" && beyazSirasi) || (bilgisayarRengi === "siyah" && !beyazSirasi);
@@ -951,8 +1015,14 @@
             ySut = sut + dsut;
           while (gecerliKare(ySat, ySut)) {
             const hedef = tahta[ySat][ySut];
-            hamleler.push({ sat: ySat, sut: ySut });
-            if (hedef) break;
+            if (hedef) {
+              if (beyazMi(hedef) !== beyaz) {
+                hamleler.push({ sat: ySat, sut: ySut });
+              }
+              break;
+            } else {
+              hamleler.push({ sat: ySat, sut: ySut });
+            }
             ySat += ds;
             ySut += dsut;
           }
@@ -964,6 +1034,7 @@
       }
 
       function hamleYap(basSat, basSut, bitSat, bitSut, kaydet = true) {
+        sonHamle = { basSat, basSut, bitSat, bitSut };
         const tas = tahta[basSat][basSut];
         const yakalanan = tahta[bitSat][bitSut];
 
@@ -1004,6 +1075,15 @@
       }
 
       function oyunBittiMiKontrol() {
+        const beyazKralVar = tahta.some((s) => s.some((t) => t === "K"));
+        const siyahKralVar = tahta.some((s) => s.some((t) => t === "k"));
+        if (!beyazKralVar || !siyahKralVar) {
+          oyunBitti = true;
+          clearInterval(zamanSayaci);
+          bildirimGoster(!beyazKralVar ? "🏆 Siyah Kazandı!" : "🏆 Beyaz Kazandı!");
+          bilgiGuncelle();
+          return;
+        }
         const tumHamleler = tumGecerliHamleleriBul(beyazSirasi);
         if (tumHamleler.length === 0) {
           oyunBitti = true;
@@ -1087,6 +1167,7 @@
 
       function bilgisayarOyna() {
         if (oyunBitti) return;
+        aiCalisiyor = true;
 
         const enIyiHamle = minimaxKok(aiDerinlik);
 
@@ -1094,8 +1175,15 @@
           hamleYap(enIyiHamle.bas.s, enIyiHamle.bas.su, enIyiHamle.bit.sat, enIyiHamle.bit.sut);
           beyazSirasi = !beyazSirasi;
           tahtayiCiz();
+          oyunBittiMiKontrol();
+          if (oyunBitti) {
+            bilgiGuncelle();
+            aiCalisiyor = false;
+            return;
+          }
           bilgiGuncelle();
         }
+        aiCalisiyor = false;
       }
 
       function minimaxKok(derinlik) {
@@ -1231,6 +1319,8 @@
       }
 
       yeniOyun();
+      initMobilePanels();
+      window.addEventListener("resize", initMobilePanels);
     </script>
   </body>
 </html>
