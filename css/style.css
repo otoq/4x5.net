@@ -353,12 +353,13 @@ button:active {
   cursor: pointer;
 }
 .language-selector select option {
-    background: #764ba2;
-    color: white;
+  background: #764ba2;
+  color: white;
 }
 
 .captured {
   min-height: 80px;
+  margin-bottom: 20px;
 }
 
 .captured h3 {
@@ -457,6 +458,7 @@ button:active {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+  margin-bottom: 20px;
 }
 
 .stat-box {
@@ -607,17 +609,164 @@ button:active {
   }
 }
 
+/* Mobile Menu Button */
+.mobile-menu-btn {
+  display: none; /* Hidden on desktop */
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--bg-gradient-1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.mobile-menu-btn:hover {
+  transform: scale(1.1);
+}
+
+.mobile-menu-btn::before {
+  display: none; /* Disable the expanding circle effect */
+}
+
+/* Close Settings Button */
+.close-settings-btn {
+  display: none;
+}
+
+#settingsPanel.active .close-settings-btn {
+  display: block;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 2001;
+  padding: 0;
+  box-shadow: none;
+}
+
+#settingsPanel.active .close-settings-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(90deg);
+}
+
+#settingsPanel.active .close-settings-btn::before {
+  display: none;
+}
+
 @media (max-width: 1200px) {
+  .mobile-menu-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .container {
-    grid-template-columns: 1fr;
-    justify-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+  }
+
+  /* Hide settings panel by default on mobile/tablet */
+  #settingsPanel {
+    display: none;
+  }
+
+  /* Show settings panel when active (overlay mode) */
+  #settingsPanel.active {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2000;
+    background: rgba(44, 62, 80, 0.95);
+    backdrop-filter: blur(10px);
+    overflow-y: auto;
+    border-radius: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    margin: 0;
+    max-width: none;
+  }
+
+  /* Board card (2nd child) */
+  .container > .card:nth-of-type(2) {
+    order: 1;
+    width: auto;
+    flex: 0 1 auto;
+    margin-bottom: 0;
+  }
+
+  /* History panel (3rd child) */
+  #historyPanel {
+    order: 2;
+    width: 300px;
+    flex: 0 1 auto;
+    max-height: 600px; /* Limit height to align better with board */
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 850px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .container > .card:nth-of-type(2) {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  #historyPanel {
+    width: 100%;
+    max-width: 500px;
   }
 }
 
 @media (max-width: 600px) {
   :root {
-    --square-size: clamp(52px, min(22vw, 18vh), 80px);
+    /* Dynamic square size: (Screen Width - Padding) / 4 columns */
+    /* 40px padding total (20px left + 20px right) + board borders/gaps */
+    --square-size: clamp(40px, calc((100vw - 80px) / 4), 85px);
   }
+
+  body {
+    padding: 10px;
+    padding-bottom: 80px;
+  }
+
+  .container {
+    gap: 15px;
+  }
+
+  .card {
+    padding: 15px;
+    border-radius: 15px;
+  }
+
   .footer-content-copy {
     flex-direction: column;
     gap: 8px;
@@ -625,5 +774,14 @@ button:active {
   }
   .footer-icons {
     justify-content: center;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .info-bar {
+    font-size: 14px;
+    padding: 10px;
   }
 }

@@ -83,7 +83,7 @@ function yeniOyun() {
 
 function tarafDegistir() {
   bilgisayarRengi = bilgisayarRengi === "beyaz" ? "siyah" : "beyaz";
-  const msg = bilgisayarRengi === "beyaz" ? t('switchedToBlack') : t('switchedToWhite'); // Logic inverted in original code? No: if computer is white, human is black.
+  const msg = bilgisayarRengi === "beyaz" ? t("switchedToBlack") : t("switchedToWhite"); // Logic inverted in original code? No: if computer is white, human is black.
   // Original: bilgisayarRengi === "beyaz" ? "SİYAH" : "BEYAZ" (Human color)
   // My translation keys: switchedToBlack (Human plays black), switchedToWhite (Human plays white)
   // If computer becomes white, human becomes black.
@@ -113,7 +113,7 @@ function geriAl() {
 
 function aiSeviyesiDegisti() {
   aiDerinlik = parseInt(document.getElementById("aiLevel").value);
-  bildirimGoster(`${t('aiLevelSet')} ${aiDerinlik}`);
+  bildirimGoster(`${t("aiLevelSet")} ${aiDerinlik}`);
 }
 
 function togglePanel(which) {
@@ -387,7 +387,7 @@ function oyunBittiMiKontrol() {
   if (!beyazKralVar || !siyahKralVar) {
     oyunBitti = true;
     clearInterval(zamanSayaci);
-    bildirimGoster(!beyazKralVar ? t('blackWon') : t('whiteWon'));
+    bildirimGoster(!beyazKralVar ? t("blackWon") : t("whiteWon"));
     bilgiGuncelle();
     return;
   }
@@ -395,7 +395,7 @@ function oyunBittiMiKontrol() {
   if (tumHamleler.length === 0) {
     oyunBitti = true;
     clearInterval(zamanSayaci);
-    bildirimGoster(beyazSirasi ? t('blackWon') : t('whiteWon'));
+    bildirimGoster(beyazSirasi ? t("blackWon") : t("whiteWon"));
     bilgiGuncelle();
   }
 }
@@ -419,10 +419,10 @@ function bilgiGuncelle() {
   const pulseEl = document.getElementById("pulse");
 
   if (oyunBitti) {
-    statusEl.textContent = beyazSirasi ? t('blackWon') : t('whiteWon');
+    statusEl.textContent = beyazSirasi ? t("blackWon") : t("whiteWon");
     pulseEl.style.background = "#e57373";
   } else {
-    const sira = beyazSirasi ? t('whitePlaying') : t('blackPlaying');
+    const sira = beyazSirasi ? t("whitePlaying") : t("blackPlaying");
     const kim = (bilgisayarRengi === "beyaz" && beyazSirasi) || (bilgisayarRengi === "siyah" && !beyazSirasi) ? " 🤖" : " 👤";
     statusEl.textContent = sira + kim;
     pulseEl.style.background = beyazSirasi ? "#4fc3f7" : "#e57373";
@@ -451,12 +451,8 @@ ${hamle.yakalanan ? `<span>❌ ${hamle.yakalanan}</span>` : ""}
 }
 
 function yakananGuncelle() {
-  document.getElementById("whiteCaptured").innerHTML = yakalananlar.beyaz
-    .map((t) => `<span class="captured-piece">${TASLAR[t]}</span>`)
-    .join("");
-  document.getElementById("blackCaptured").innerHTML = yakalananlar.siyah
-    .map((t) => `<span class="captured-piece">${TASLAR[t]}</span>`)
-    .join("");
+  document.getElementById("whiteCaptured").innerHTML = yakalananlar.beyaz.map((t) => `<span class="captured-piece">${TASLAR[t]}</span>`).join("");
+  document.getElementById("blackCaptured").innerHTML = yakalananlar.siyah.map((t) => `<span class="captured-piece">${TASLAR[t]}</span>`).join("");
 }
 
 function istatistikGuncelle() {
@@ -628,3 +624,9 @@ function tahtayiDegerlendir(testTahta) {
 yeniOyun();
 initMobilePanels();
 window.addEventListener("resize", initMobilePanels);
+
+function toggleMobileSettings() {
+  const settingsPanel = document.getElementById("settingsPanel");
+  settingsPanel.classList.toggle("active");
+  document.body.style.overflow = settingsPanel.classList.contains("active") ? "hidden" : "";
+}

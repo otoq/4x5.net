@@ -7,8 +7,14 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
+    <!-- Mobile Menu Button -->
+    <button id="mobileMenuBtn" class="mobile-menu-btn" onclick="toggleMobileSettings()">
+      <span class="icon">⚙️</span>
+    </button>
+
     <div class="container">
       <div id="settingsPanel" class="side-panel card">
+        <button id="closeSettingsBtn" class="close-settings-btn" onclick="toggleMobileSettings()">✖</button>
         <div class="collapsible-header" onclick="togglePanel('settings')">
           <h3 id="settingsTitle" style="color: white; margin-bottom: 0; display: flex; align-items: center; gap: 8px">
             <span class="icon">🎯</span> Settings
@@ -46,24 +52,6 @@
               <option value="4">💀 Expert (Level 4)</option>
             </select>
           </div>
-          <div class="stats">
-            <div class="stat-box">
-              <span class="stat-value" id="moveCount">0</span>
-              <span class="stat-label" id="lblMoves">Moves</span>
-            </div>
-            <div class="stat-box">
-              <span class="stat-value" id="captureCount">0</span>
-              <span class="stat-label" id="lblCaptured">Captured</span>
-            </div>
-          </div>
-          <div class="captured">
-            <h3 id="lblWhiteCaptured"><span class="icon">⚪</span> White Captured</h3>
-            <div class="captured-pieces" id="whiteCaptured"></div>
-          </div>
-          <div class="captured">
-            <h3 id="lblBlackCaptured"><span class="icon">⚫</span> Black Captured</h3>
-            <div class="captured-pieces" id="blackCaptured"></div>
-          </div>
         </div>
       </div>
 
@@ -89,6 +77,24 @@
           <span class="chevron">▾</span>
         </div>
         <div id="historyContent" class="collapsible-content">
+          <div class="stats">
+            <div class="stat-box">
+              <span class="stat-value" id="moveCount">0</span>
+              <span class="stat-label" id="lblMoves">Moves</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-value" id="captureCount">0</span>
+              <span class="stat-label" id="lblCaptured">Captured</span>
+            </div>
+          </div>
+          <div class="captured">
+            <h3 id="lblWhiteCaptured"><span class="icon">⚪</span> White Captured</h3>
+            <div class="captured-pieces" id="whiteCaptured"></div>
+          </div>
+          <div class="captured">
+            <h3 id="lblBlackCaptured"><span class="icon">⚫</span> Black Captured</h3>
+            <div class="captured-pieces" id="blackCaptured"></div>
+          </div>
           <div class="move-list" id="moveHistory"></div>
         </div>
       </div>
