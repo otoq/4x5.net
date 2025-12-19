@@ -628,5 +628,11 @@ window.addEventListener("resize", initMobilePanels);
 function toggleMobileSettings() {
   const settingsPanel = document.getElementById("settingsPanel");
   settingsPanel.classList.toggle("active");
-  document.body.style.overflow = settingsPanel.classList.contains("active") ? "hidden" : "";
+
+  if (settingsPanel.classList.contains("active")) {
+    settingsPanel.classList.remove("collapsed");
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "";
+  }
 }
