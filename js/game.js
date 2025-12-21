@@ -111,9 +111,12 @@ function geriAl() {
   }
 }
 
+const AI_DEPTHS = { 1: 2, 2: 3, 3: 5, 4: 7 };
+
 function aiSeviyesiDegisti() {
-  aiDerinlik = parseInt(document.getElementById("aiLevel").value);
-  bildirimGoster(`${t("aiLevelSet")} ${aiDerinlik}`);
+  const level = parseInt(document.getElementById("aiLevel").value);
+  aiDerinlik = AI_DEPTHS[level] || 3;
+  bildirimGoster(`${t("aiLevelSet")} ${level}`);
 }
 
 function togglePanel(which) {
@@ -387,7 +390,7 @@ function oyunBittiMiKontrol() {
   if (!beyazKralVar || !siyahKralVar) {
     oyunBitti = true;
     clearInterval(zamanSayaci);
-    bildirimGoster(!beyazKralVar ? t("blackWon") : t("whiteWon"));
+    oyunBittiGoster(!beyazKralVar ? "black" : "white");
     bilgiGuncelle();
     return;
   }
@@ -395,9 +398,65 @@ function oyunBittiMiKontrol() {
   if (tumHamleler.length === 0) {
     oyunBitti = true;
     clearInterval(zamanSayaci);
-    bildirimGoster(beyazSirasi ? t("blackWon") : t("whiteWon"));
+    oyunBittiGoster(beyazSirasi ? "black" : "white");
     bilgiGuncelle();
   }
+}
+
+function oyunBittiGoster(kazanan) {
+  const screen = document.getElementById("gameOverScreen");
+  const msg = document.getElementById("gameOverMessage");
+
+  screen.classList.remove("hidden");
+  msg.textContent = kazanan === "white" ? t("whiteWon") : t("blackWon");
+
+  const container = document.getElementById("mainGameContainer");
+  container.style.filter = "blur(5px)";
+  container.style.opacity = "0.5";
+  container.style.pointerEvents = "none";
+}
+
+function restartGame() {
+  const screen = document.getElementById("gameOverScreen");
+  screen.classList.add("hidden");
+
+  const container = document.getElementById("mainGameContainer");
+  container.style.filter = "none";
+  container.style.opacity = "1";
+  container.style.pointerEvents = "all";
+
+  yeniOyun();
+}
+
+function showMainMenu() {
+  const gameOverScreen = document.getElementById("gameOverScreen");
+  gameOverScreen.classList.add("hidden");
+
+  const startScreen = document.getElementById("startScreen");
+  startScreen.classList.remove("hidden");
+
+  // Keep background blurred
+  const container = document.getElementById("mainGameContainer");
+  container.style.filter = "blur(5px)";
+  container.style.opacity = "0.5";
+  container.style.pointerEvents = "none";
+}
+
+function reviewGame() {
+  const gameOverScreen = document.getElementById("gameOverScreen");
+  gameOverScreen.classList.add("hidden");
+
+  // Show board for review (keep oyunBitti true so no moves can be made)
+  const container = document.getElementById("mainGameContainer");
+  container.style.filter = "none";
+  container.style.opacity = "1";
+  container.style.pointerEvents = "all";
+
+  // Optional: You might want to let them Undo to see previous states
+  // The 'Undo' button in settings should work if we allow pointerEvents = all
+  // But we need to make sure kareTiklandi doesn't allow new moves.
+  // It already checks: if (oyunBitti || aiCalisiyor) return;
+  // So they can view, but not play.
 }
 
 function tumGecerliHamleleriBul(beyazIcin) {
@@ -494,7 +553,7 @@ function minimaxKok(derinlik) {
   if (hamleler.length === 0) return null;
 
   let enIyiSkor = beyazSirasi ? -99999 : 99999;
-  let enIyiHamle = hamleler[0];
+  let enIyiHamleler = [];
 
   for (const hamle of hamleler) {
     const testTahta = tahta.map((s) => [...s]);
@@ -513,17 +572,26 @@ function minimaxKok(derinlik) {
     if (beyazSirasi) {
       if (skor > enIyiSkor) {
         enIyiSkor = skor;
-        enIyiHamle = hamle;
+        enIyiHamleler = [hamle];
+      } else if (skor === enIyiSkor) {
+        enIyiHamleler.push(hamle);
       }
     } else {
       if (skor < enIyiSkor) {
         enIyiSkor = skor;
-        enIyiHamle = hamle;
+        enIyiHamleler = [hamle];
+      } else if (skor === enIyiSkor) {
+        enIyiHamleler.push(hamle);
       }
     }
   }
 
-  return enIyiHamle;
+  if (enIyiHamleler.length > 0) {
+    const randomIndex = Math.floor(Math.random() * enIyiHamleler.length);
+    return enIyiHamleler[randomIndex];
+  }
+
+  return null;
 }
 
 function minimax(testTahta, derinlik, alpha, beta, maksimize) {
@@ -643,10 +711,11 @@ function startGame() {
   const langSelect = document.getElementById("startLanguage");
 
   // Set game state
-  aiDerinlik = parseInt(diffSelect.value);
+  const level = parseInt(diffSelect.value);
+  aiDerinlik = AI_DEPTHS[level] || 3;
 
   // Sync with main settings panel
-  document.getElementById("aiLevel").value = aiDerinlik;
+  document.getElementById("aiLevel").value = level;
 
   // Hide start screen
   const startScreen = document.getElementById("startScreen");

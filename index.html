@@ -50,6 +50,20 @@
       </div>
     </div>
 
+    <!-- Game Over Screen Overlay -->
+    <div id="gameOverScreen" class="start-screen hidden">
+      <div class="start-content">
+        <h1 id="gameOverTitle" class="game-title">🏆 GAME OVER</h1>
+        <p id="gameOverMessage" class="subtitle">White Wins!</p>
+
+        <div class="start-controls">
+          <button id="btnPlayAgain" class="btn-start" onclick="restartGame()">🔄 PLAY AGAIN</button>
+          <button id="btnReviewGame" class="btn-secondary" onclick="reviewGame()">👀 REVIEW GAME</button>
+          <button id="btnMainMenu" class="btn-secondary" onclick="showMainMenu()">🏠 MAIN MENU</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Mobile Menu Button -->
     <button id="mobileMenuBtn" class="mobile-menu-btn" onclick="toggleMobileSettings()">
       <span class="icon">⚙️</span>

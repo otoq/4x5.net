@@ -133,6 +133,27 @@ body {
   transform: translateY(-2px);
 }
 
+.btn-secondary {
+  width: 100%;
+  padding: 15px;
+  background: #444;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  border: 1px solid #555;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-secondary:hover {
+  background: #555;
+  transform: translateY(-2px);
+}
+
 .footer-credits {
   margin-top: 2rem;
   font-size: 0.8rem;

@@ -26,6 +26,10 @@ const translations = {
     startGame: "START GAME",
     gameTitle: "♔ 4×5 Chess Pro ♚",
     gameSubtitle: "Strategic Mastery in Minimal Space",
+    playAgain: "PLAY AGAIN",
+    mainMenu: "MAIN MENU",
+    gameOver: "GAME OVER",
+    reviewGame: "REVIEW GAME",
   },
   tr: {
     settings: "Ayarlar",
@@ -54,6 +58,10 @@ const translations = {
     startGame: "OYUNA BAŞLA",
     gameTitle: "♔ 4×5 Satranç Pro ♚",
     gameSubtitle: "Minimum Alanda Stratejik Ustalık",
+    playAgain: "TEKRAR OYNA",
+    mainMenu: "ANA MENÜ",
+    gameOver: "OYUN BİTTİ",
+    reviewGame: "OYUNU İNCELE",
   },
   es: {
     settings: "Ajustes",
@@ -320,6 +328,19 @@ function updateUIText() {
     startDifficulty.options[2].textContent = t("hard");
     startDifficulty.options[3].textContent = t("expert");
   }
+
+  // Update Game Over Screen elements
+  const gameOverTitle = document.getElementById("gameOverTitle");
+  if (gameOverTitle) gameOverTitle.textContent = t("gameOver");
+
+  const btnPlayAgain = document.getElementById("btnPlayAgain");
+  if (btnPlayAgain) btnPlayAgain.textContent = `🔄 ${t("playAgain")}`;
+
+  const btnMainMenu = document.getElementById("btnMainMenu");
+  if (btnMainMenu) btnMainMenu.textContent = `🏠 ${t("mainMenu")}`;
+
+  const btnReviewGame = document.getElementById("btnReviewGame");
+  if (btnReviewGame) btnReviewGame.textContent = `👀 ${t("reviewGame")}`;
 
   // Update static elements
   const settingsTitle = document.getElementById("settingsTitle");
